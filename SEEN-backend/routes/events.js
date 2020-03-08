@@ -31,17 +31,13 @@ router.post('/', (req, res) => {
         duration: req.body.duration
     })
 
-    if(!req.body.eventType || !req.body.targetAddrMac) {
-        event.save()
-        .then(data => {
-            res.json(data);
-        })
-        .catch(() => {
-            res.status(400).json({ msg: 'Something went wrong' })
-        })
-    }
-
-    res.status(400).json({ msg: 'Please fill all the necessary fields' });
+    event.save()
+    .then(data => {
+        res.json(data);
+    })
+    .catch(() => {
+        res.status(400).json({ msg: 'Something went wrong. Probably you need to fill all the necessary fields' })
+    })
 })
 
 module.exports = router;

@@ -15,11 +15,12 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, () =>
 
 // Middlewares
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // Routes
 app.use('/aps', require('./routes/aps'));
+app.use('/events', require('./routes/events'));
 
 
 const PORT = process.env.PORT || 5000;

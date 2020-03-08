@@ -11,7 +11,7 @@ const EventSchema = mongoose.Schema({
         required: true
     },
     duration: {
-        type: String,
+        type: Number,
         required: false
     },
     timestamp: {
@@ -20,4 +20,4 @@ const EventSchema = mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Event', EventSchema);
+module.exports = mongoose.model('Events', EventSchema);

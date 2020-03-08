@@ -1,0 +1,102 @@
+{
+    "Ssid": "CINUFPE",
+    "Encryption": "WPA2",
+    "Cipher": "CCMP",
+    "Authentication": "MGT",
+    "Aps": [
+        {
+            "Mac": "46:a4:3c:e7:34:a9",
+            "AssocDevices": []
+        },
+        {
+            "Mac": "02:9f:c2:d7:81:04",
+            "AssocDevices": [
+                {
+                    "Mac": "7c:8b:b5:6a:09:f3"
+                },
+                {
+                    "Mac": "33:33:00:00:00:fb"
+                },
+                {
+                    "Mac": "ff:ff:ff:ff:ff:ff"
+                },
+                {
+                    "Mac": "7c:8b:b5:6a:09:f3"
+                },
+                {
+                    "Mac": "33:33:00:00:00:fb"
+                },
+                {
+                    "Mac": "ff:ff:ff:ff:ff:ff"
+                },
+                {
+                    "Mac": "ff:ff:ff:ff:ff:ff"
+                },
+                {
+                    "Mac": "7c:8b:b5:6a:09:f3"
+                },
+                {
+                    "Mac": "33:33:00:00:00:fb"
+                },
+                {
+                    "Mac": "ff:ff:ff:ff:ff:ff"
+                },
+                {
+                    "Mac": "7c:8b:b5:6a:09:f3"
+                },
+                {
+                    "Mac": "33:33:00:00:00:fb"
+                },
+                {
+                    "Mac": "ff:ff:ff:ff:ff:ff"
+                },
+                {
+                    "Mac": "7c:8b:b5:6a:09:f3"
+                },
+                {
+                    "Mac": "33:33:00:00:00:fb"
+                },
+                {
+                    "Mac": "ff:ff:ff:ff:ff:ff"
+                },
+                {
+                    "Mac": "7c:8b:b5:6a:09:f3"
+                },
+                {
+                    "Mac": "33:33:00:00:00:fb"
+                },
+                {
+                    "Mac": "ff:ff:ff:ff:ff:ff"
+                },
+                {
+                    "Mac": "7c:8b:b5:6a:09:f3"
+                },
+                {
+                    "Mac": "33:33:00:00:00:fb"
+                },
+                {
+                    "Mac": "ff:ff:ff:ff:ff:ff"
+                },
+                {
+                    "Mac": "7c:8b:b5:6a:09:f3"
+                },
+                {
+                    "Mac": "33:33:00:00:00:fb"
+                },
+                {
+                    "Mac": "ff:ff:ff:ff:ff:ff"
+                },
+                {
+                    "Mac": "7c:8b:b5:6a:09:f3"
+                },
+                {
+                    "Mac": "33:33:00:00:00:fb"
+                }
+            ]
+        },
+        {
+            "Mac": "92:2a:a8:c4:b7:46",
+            "AssocDevices": []
+        }
+    ]
+}
