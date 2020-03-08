@@ -1,11 +1,18 @@
 import React, { Component } from 'react'
 import './Graph.css'
+import apis from '../../api/index';
+
 
 const d3 = require('d3');
 const rawData = require('./data.json');
 
 class Graph extends Component {
     componentDidMount() {
+        // apis.getAllEvents()
+        // .then(res => {
+        //     console.log(res.data);
+        // })
+        // .catch()
         d3.selectAll("p").style("color", "blue");
         this.makeGraph();
     }
