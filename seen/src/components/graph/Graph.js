@@ -109,14 +109,21 @@ class Graph extends Component {
             .style('stroke', 'black')
 
         // Gera os nodes no DOM
-        var node = d3.select('svg').append('g')
+        var node = d3.select('svg')
+            .append('g')
             .attr('class', 'nodes')
             .selectAll('circle')
-            .data(nodes)
+            .data(nodes, d => d.i)
             .enter()
-            .append('circle')
-            .attr('r', d => d.radius)
-            .attr('fill', d => d.color )
+            // .append('circle')
+            // .attr('r', d => d.radius)
+            // .style('fill', d => d.color)
+            .append('image')
+            .attr("xlink:href", function (d) { return d.img; })
+            .attr("x", function (d) { return -25; })
+            .attr("y", function (d) { return -25; })
+            .attr("height", 50)
+            .attr("width", 50)
             .on("click", function (d) {
                 window.location.replace("http://localhost:3000/Alerts?Mac=" + d.Mac);
             })
@@ -244,9 +251,12 @@ class Graph extends Component {
             node.data(nodes)
             link.data(links)
 
-            node.attr("cx", function (d) { return d.x; })
-                .attr("cy", function (d) { return d.y; })
+            // With circles
+            // node.attr("cx", function (d) { return d.x; })
+            //     .attr("cy", function (d) { return d.y; })
 
+            // With Images
+            node.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
 
             link.attr("x1", function (d) { return d.source.x; })
                 .attr("y1", function (d) { return d.source.y; })
