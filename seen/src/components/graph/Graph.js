@@ -6,6 +6,9 @@ import apis from '../../api/index';
 const d3 = require('d3');
 const rawData = require('./data.json');
 
+const APUrl = "https://img.icons8.com/dusk/64/000000/cisco-router.png";
+const StaUrl = "https://img.icons8.com/ios-filled/100/000000/smartphone.png"
+
 class Graph extends Component {
     componentDidMount() {
         // apis.getAllEvents()
@@ -33,7 +36,8 @@ class Graph extends Component {
                     radius: 15,
                     color: 'blue',
                     status: 'Healthy',
-                    underAttack: false
+                    underAttack: false,
+                    img: APUrl
 
                 })
                 aux = i;
@@ -47,7 +51,8 @@ class Graph extends Component {
                         radius: 12,
                         color: 'green',
                         status: 'Healthy',
-                        underAttack: false
+                        underAttack: false,
+                        img: StaUrl
                     })
                     links.push({ // Sintaxe utilizada pelo d3 para criar as arestas
                         source: i,
@@ -111,7 +116,7 @@ class Graph extends Component {
             .enter()
             .append('circle')
             .attr('r', d => d.radius)
-            .attr('fill', d => d.color)
+            .attr('fill', d => d.color )
             .on("click", function (d) {
                 window.location.replace("http://localhost:3000/Alerts?Mac=" + d.Mac);
             })
@@ -145,6 +150,14 @@ class Graph extends Component {
                     .style("opacity", "0")
                     .style("display", "none")  //The tooltip disappears
             });
+
+        // Aplica a imagem do roteador
+        // var node = node.append("image")
+        //     .attr("xlink:href",  function (d) { return d.img })
+        //     // .attr("x", function (d) { return -8; })
+        //     // .attr("y", function (d) { return -8; })
+        //     .attr("height", 16)
+        //     .attr("width", 16);
 
         var alertAttack = setInterval(() => {
             /*Essa função serve pra mudar a cor do nó

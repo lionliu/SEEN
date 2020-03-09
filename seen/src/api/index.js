@@ -5,8 +5,10 @@
 
 import axios from 'axios'
 
+const PORT = process.env.PORT || 5000;
+
 const api = axios.create({
-    baseURL: 'http://localhost:5000/',
+    baseURL: `http://localhost:${PORT}/`
 })
 
 export const insertEvent = payload => api.post(`/events`, payload)
