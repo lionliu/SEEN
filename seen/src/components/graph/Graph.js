@@ -68,11 +68,11 @@ class Graph extends Component {
     }
 
     makeGraph() {
-        var width = 1366 * 0.95, height = 768 * 0.95;
+        var width = 1920 * 0.95, height = 1080 * 0.95;
         var data = this.toData(rawData)
         var nodes = data.nodes;
         var links = data.links;
-        var centered;
+        // var centered;
 
         var myTool = d3.select("body")
             .append("div")
@@ -84,14 +84,15 @@ class Graph extends Component {
             .append('svg')
             .attr('width', '80vw')
             .attr('height', '82vh')
-            .call(d3.zoom().on("zoom", function () {
-                link.attr("transform", d3.event.transform)
-                node.attr("transform", d3.event.transform)
-            }))
-        //.style('border', '1px solid black')
+            // .call(d3.zoom().on("zoom", function () {
+            //     link.attr("transform", d3.event.transform)
+            //     node.attr("transform", d3.event.transform)
+            //     // image.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
+            // }))
+            .style('border', '1px solid black')
 
         var simulation = d3.forceSimulation(nodes) // Inicializa a simulação com o array de nodes
-            .force('charge', d3.forceManyBody().strength(-250)) // Faz com que os nós fiquem espaçados igualmente. O número negativo indica uma força de repulsao entre os nós.
+            .force('charge', d3.forceManyBody().strength(-200)) // Faz com que os nós fiquem espaçados igualmente. O número negativo indica uma força de repulsao entre os nós.
             .force('center', d3.forceCenter(width / 2, height / 2)) // Indica a posição do centro
             // .force('collision', d3.forceCollide().radius(function(d){return d.radius}))
             .force('link', d3.forceLink().links(links).distance(70)) // Indica o array de arestas e o tamanho delas
@@ -109,21 +110,26 @@ class Graph extends Component {
             .style('stroke', 'black')
 
         // Gera os nodes no DOM
-        var node = d3.select('svg')
-            .append('g')
-            .attr('class', 'nodes')
-            .selectAll('circle')
-            .data(nodes, d => d.i)
-            .enter()
-            // .append('circle')
-            // .attr('r', d => d.radius)
-            // .style('fill', d => d.color)
-            .append('image')
+        var node = canvas.selectAll("g.node")
+            .data(nodes, function (d) { return d.id; });
+
+        var nodeEnter = node.enter().append("svg:g")
+            .attr("class", "node")
+            .attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
+
+        nodeEnter.append('svg:circle')
+            .attr('r', d => d.radius)
+            .style('fill', d => d.color)
+
+        var images = nodeEnter.filter(d => d.isAp)
+            .append("svg:image")
             .attr("xlink:href", function (d) { return d.img; })
             .attr("x", function (d) { return -25; })
             .attr("y", function (d) { return -25; })
             .attr("height", 50)
-            .attr("width", 50)
+            .attr("width", 50);
+
+        nodeEnter
             .on("click", function (d) {
                 window.location.replace("http://localhost:3000/Alerts?Mac=" + d.Mac);
             })
@@ -157,14 +163,6 @@ class Graph extends Component {
                     .style("opacity", "0")
                     .style("display", "none")  //The tooltip disappears
             });
-
-        // Aplica a imagem do roteador
-        // var node = node.append("image")
-        //     .attr("xlink:href",  function (d) { return d.img })
-        //     // .attr("x", function (d) { return -8; })
-        //     // .attr("y", function (d) { return -8; })
-        //     .attr("height", 16)
-        //     .attr("width", 16);
 
         var alertAttack = setInterval(() => {
             /*Essa função serve pra mudar a cor do nó
@@ -246,6 +244,10 @@ class Graph extends Component {
             console.log('Done!');
         },3000)*/
 
+        // Remove old nodes and select the new ones
+        node.exit().remove();
+        node = canvas.selectAll('g.node');
+
         // Função necessaria para inicializar a simulacao
         function ticked() {
             node.data(nodes)
@@ -255,6 +257,10 @@ class Graph extends Component {
             // node.attr("cx", function (d) { return d.x; })
             //     .attr("cy", function (d) { return d.y; })
 
+            // To keep within the borders
+            node.attr("cx", function (d) { return d.x = Math.max(d.radius, Math.min(width - d.radius, d.x)); })
+                .attr("cy", function (d) { return d.y = Math.max(d.radius, Math.min(height - d.radius, d.y)); });
+
             // With Images
             node.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
 
@@ -263,6 +269,12 @@ class Graph extends Component {
                 .attr("x2", function (d) { return d.target.x; })
                 .attr("y2", function (d) { return d.target.y; });
         }
+
+        // function nodeTransform(d) {
+        //     d.x = Math.max(maxNodeSize, Math.min(w - (d.imgwidth / 2 || 16), d.x));
+        //     d.y = Math.max(maxNodeSize, Math.min(h - (d.imgheight / 2 || 16), d.y));
+        //     return "translate(" + d.x + "," + d.y + ")";
+        // }
     }
 
     render() {
