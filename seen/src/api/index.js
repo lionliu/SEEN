@@ -14,11 +14,16 @@ const api = axios.create({
 export const insertEvent = payload => api.post(`/events`, payload)
 export const getAllEvents = () => api.get(`/events`)
 export const getEventById = id => api.get(`/events/${id}`)
+export const getAllAps = () => api.get('/aps')
+export const getApByMac = mac => api.get(`/aps/${mac}`)
+
 
 const apis = {
     insertEvent,
     getAllEvents,
-    getEventById
+    getEventById,
+    getAllAps,
+    getApByMac
 }
 
 export default apis

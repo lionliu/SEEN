@@ -26,7 +26,6 @@ const DeviceSchema = mongoose.Schema({
 
 const ApSchema = mongoose.Schema({
     // mac, ip?, ssid, protocolo de seguranca
-
     mac: {
         type: String,
         required: true
@@ -39,11 +38,13 @@ const ApSchema = mongoose.Schema({
         type: String,
         required: false
     },
-    SecurityProtocol: {
+    securityProtocol: {
         type: String,
         required: false
     },
     devices: [DeviceSchema]
 });
 
-module.exports = mongoose.model('Ap', ApSchema);
+var Ap = mongoose.model('Ap', ApSchema);
+Ap.Device = mongoose.model('Device', DeviceSchema);
+module.exports = Ap;

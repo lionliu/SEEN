@@ -1,0 +1,31 @@
+{
+    "Aps" : [
+        {
+            "_id": "5e67f8f801af6d059f23a1fc",
+            "mac": "FF:FF:FF:FF:FF:FF",
+            "ip": "108.256.128.16",
+            "ssid": "dummy",
+            "SecurityProtocol": "WPA2",
+            "devices": [
+                {
+                    "_id": "5e68062271744a06ac6b2731",
+                    "mac": "AA:AA:AA:AA:AA:AA"
+                },
+                {
+                    "_id": "5e68244522729806b1f5d9ff",
+                    "mac": "CC:CC:CC:CC:CC:CC",
+                    "manufacturer": "Google"
+                }
+            ],
+            "__v": 0
+        },
+        {
+            "_id": "5e6823be22729806b1f5d9fe",
+            "mac": "BB:BB:BB:BB:BB:BB",
+            "ip": "111.222.333.444",
+            "ssid": "dummy",
+            "devices": [],
+            "__v": 0
+        }
+    ]
+}

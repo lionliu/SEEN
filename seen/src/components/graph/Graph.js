@@ -5,49 +5,57 @@ import apis from '../../api/index';
 
 const d3 = require('d3');
 const rawData = require('./data.json');
+const rawData2 = require('./data2.json');
 
 const APUrl = "https://img.icons8.com/dusk/64/000000/cisco-router.png";
 const StaUrl = "https://img.icons8.com/ios-filled/100/000000/smartphone.png"
 
 class Graph extends Component {
+
+    state = {
+        Aps: []
+    }
+
     componentDidMount() {
-        // apis.getAllEvents()
-        // .then(res => {
-        //     console.log(res.data);
-        // })
-        // .catch()
+        apis.getAllAps()
+        .then(res => {
+            console.log(res.data);
+            this.setState({ Aps: res.data });
+        })
+        .catch()
         d3.selectAll("p").style("color", "blue");
         this.makeGraph();
     }
 
+
     toData(data) {
+        // console.log(data)
         var links = [];
         var nodes = [];
         var i = 0;
         var aux;
 
-        data.Aps.forEach((device) => {
-            if (device.AssocDevices != null) {
+        data.forEach((Ap) => {
+            if (Ap.devices != null) {
                 nodes.push({
                     index: i,
                     isAp: true,
                     parent: null,
-                    Mac: device.Mac,
+                    mac: Ap.mac,
                     radius: 15,
                     color: 'blue',
                     status: 'Healthy',
                     underAttack: false,
                     img: APUrl
-
                 })
                 aux = i;
                 i += 1;
-                device.AssocDevices.forEach((a) => {
+                Ap.devices.forEach((assoc) => {
                     nodes.push({
                         index: i,
                         isAp: false,
                         parent: aux,
-                        Mac: a.Mac,
+                        mac: assoc.mac,
                         radius: 12,
                         color: 'green',
                         status: 'Healthy',
@@ -69,7 +77,7 @@ class Graph extends Component {
 
     makeGraph() {
         var width = 1920 * 0.95, height = 1080 * 0.95;
-        var data = this.toData(rawData)
+        var data = this.state.Aps;
         var nodes = data.nodes;
         var links = data.links;
         // var centered;
@@ -84,11 +92,14 @@ class Graph extends Component {
             .append('svg')
             .attr('width', '80vw')
             .attr('height', '82vh')
-            // .call(d3.zoom().on("zoom", function () {
-            //     link.attr("transform", d3.event.transform)
-            //     node.attr("transform", d3.event.transform)
-            //     // image.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
-            // }))
+            .call(d3.zoom()
+                .extent([[0, 0], [width, height]])
+                .scaleExtent([1, 8])
+                .on("zoom", function () {
+                link.attr("transform", d3.event.transform)
+                node.attr("transform", d3.event.transform)
+                // image.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
+            }))
             .style('border', '1px solid black')
 
         var simulation = d3.forceSimulation(nodes) // Inicializa a simulação com o array de nodes
@@ -98,6 +109,14 @@ class Graph extends Component {
             .force('link', d3.forceLink().links(links).distance(70)) // Indica o array de arestas e o tamanho delas
             // .force('link', d3.forceLink().links(links).distance(links.length * 3))
             .on('tick', ticked) // Faz com que a simulacao rode
+
+        // var simulation = d3.forceSimulation(nodes)
+        //     .force("link", d3.forceLink(links).id(d => d.index).links(links).distance(60))
+        //     .force("charge", d3.forceManyBody().strength(-100))
+        //     .force('center', d3.forceCenter(width / 2, height / 2)) // Indica a posição do centro
+        //     .force("x", d3.forceX())
+        //     .force("y", d3.forceY())
+        //     .on('tick', ticked);
 
         // Vai gerar as arestas no DOM
         var link = d3.select('svg').append('g')
@@ -110,29 +129,14 @@ class Graph extends Component {
             .style('stroke', 'black')
 
         // Gera os nodes no DOM
-        var node = canvas.selectAll("g.node")
-            .data(nodes, function (d) { return d.id; });
-
-        var nodeEnter = node.enter().append("svg:g")
-            .attr("class", "node")
-            .attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
-
-        nodeEnter.append('svg:circle')
+        var node = d3.select('svg').append('g')
+            .attr('class', 'nodes')
+            .selectAll('circle')
+            .data(nodes)
+            .enter()
+            .append('circle')
             .attr('r', d => d.radius)
-            .style('fill', d => d.color)
-
-        var images = nodeEnter.filter(d => d.isAp)
-            .append("svg:image")
-            .attr("xlink:href", function (d) { return d.img; })
-            .attr("x", function (d) { return -25; })
-            .attr("y", function (d) { return -25; })
-            .attr("height", 50)
-            .attr("width", 50);
-
-        nodeEnter
-            .on("click", function (d) {
-                window.location.replace("http://localhost:3000/Alerts?Mac=" + d.Mac);
-            })
+            .attr('fill', d => d.color)
             .on("mouseover", function (d) {  //Mouse
                 d3.select(this)
                     .transition()
@@ -146,7 +150,7 @@ class Graph extends Component {
 
                 myTool
                     .html(
-                        "<div id ='teste' >Mac: " + d.Mac + "<br>Status: " + d.status + "</div>"
+                        "<div id ='teste' >Mac: " + d.mac + "<br>Status: " + d.status + "</div>"
                     )
                     .style("left", (d3.event.pageX - 90) + "px")
                     .style("top", (d3.event.pageY - 60) + "px")
@@ -171,34 +175,34 @@ class Graph extends Component {
 
             fetch('/attacks')
                 .then(res => res.json())
-                .then(data => {
-                    if (data.length > 0) {
-                        console.log(data[0].dstAddrMAC)
-                        data.forEach(dt => {
-                            nodes.forEach((d) => {
-                                if (d.Mac === dt.dstAddrMAC) {
-                                    console.log('Detectei nó sendo atacado.');
-                                    d.color = 'yellow';
-                                    d.status = 'Unhealthy';
-                                    d.underAttack = true;
-                                }
-                            })
-                        })
-                    }
-                    nodes.forEach((d) => {
-                        if (!d.isAp) {
-                            if (!d.underAttack) {
-                                d.color = 'green';
-                                d.status = 'healthy';
-                            }
-                            if (d.underAttack) {
-                                d.underAttack = false;
-                            }
-                        }
-                    })
-                    node.data(nodes)
-                        .attr('fill', (d) => { return d.color })
-                })
+                // .then(data => {
+                //     if (data.length > 0) {
+                //         console.log(data[0].dstAddrMAC)
+                //         data.forEach(dt => {
+                //             nodes.forEach((d) => {
+                //                 if (d.mac === dt.dstAddrMAC) {
+                //                     console.log('Detectei nó sendo atacado.');
+                //                     d.color = 'yellow';
+                //                     d.status = 'Unhealthy';
+                //                     d.underAttack = true;
+                //                 }
+                //             })
+                //         })
+                //     }
+                //     nodes.forEach((d) => {
+                //         if (!d.isAp) {
+                //             if (!d.underAttack) {
+                //                 d.color = 'green';
+                //                 d.status = 'healthy';
+                //             }
+                //             if (d.underAttack) {
+                //                 d.underAttack = false;
+                //             }
+                //         }
+                //     })
+                //     node.data(nodes)
+                //         .attr('fill', (d) => { return d.color })
+                // })
                 .catch((err) => {
                     console.log('Error fetching data');
                     console.log(err);
@@ -229,7 +233,7 @@ class Graph extends Component {
             testFlag = !testFlag
             node.data(nodes)
             node.attr('fill', (d)=>{
-                if(d.Mac === 'ff:ff:ff:ff:ff:ff'){
+                if(d.mac === 'ff:ff:ff:ff:ff:ff'){
                     if(testFlag === true){
                         d.status = 'Unhealthy'
                         return 'yellow'
@@ -243,10 +247,6 @@ class Graph extends Component {
             })
             console.log('Done!');
         },3000)*/
-
-        // Remove old nodes and select the new ones
-        node.exit().remove();
-        node = canvas.selectAll('g.node');
 
         // Função necessaria para inicializar a simulacao
         function ticked() {
@@ -262,7 +262,7 @@ class Graph extends Component {
                 .attr("cy", function (d) { return d.y = Math.max(d.radius, Math.min(height - d.radius, d.y)); });
 
             // With Images
-            node.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
+            // node.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
 
             link.attr("x1", function (d) { return d.source.x; })
                 .attr("y1", function (d) { return d.source.y; })
