@@ -13,23 +13,47 @@ const StaUrl = "https://img.icons8.com/ios-filled/100/000000/smartphone.png"
 class Graph extends Component {
 
     state = {
-        Aps: []
+        Aps: [],
+        isFetching: false,
+        firstFetch: true
+    }
+
+    fetchAps() {
+        this.setState({ ...this.state, isFetching: true });
+        apis.getAllAps()
+            .then(res => {
+                this.setState({ Aps: res.data, isFetching: false, })
+                console.log(this.state.Aps)
+                if(this.state.firstFetch) {
+                    this.makeGraph()
+                    this.setState({ firstFetch: false })
+                }
+            })
+            .catch(e => {
+                console.log(e);
+                this.setState({ ...this.state, isFetching: false });
+            });
     }
 
     componentDidMount() {
-        apis.getAllAps()
-        .then(res => {
-            console.log(res.data);
-            this.setState({ Aps: res.data });
-        })
-        .catch()
-        d3.selectAll("p").style("color", "blue");
+        // apis.getAllAps()
+        // .then(res => {
+        //     console.log(res.data);
+        //     this.setState({ Aps: res.data });
+        //     this.makeGraph();
+        // })
+        this.fetchAps();
         this.makeGraph();
+        this.timer = setInterval(() => this.fetchAps(), 5000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timer);
+        this.timer = null;
     }
 
 
     toData(data) {
-        // console.log(data)
         var links = [];
         var nodes = [];
         var i = 0;
@@ -77,7 +101,7 @@ class Graph extends Component {
 
     makeGraph() {
         var width = 1920 * 0.95, height = 1080 * 0.95;
-        var data = this.state.Aps;
+        var data = this.toData(this.state.Aps);
         var nodes = data.nodes;
         var links = data.links;
         // var centered;
@@ -254,12 +278,12 @@ class Graph extends Component {
             link.data(links)
 
             // With circles
-            // node.attr("cx", function (d) { return d.x; })
-            //     .attr("cy", function (d) { return d.y; })
+            node.attr("cx", function (d) { return d.x; })
+                .attr("cy", function (d) { return d.y; })
 
             // To keep within the borders
-            node.attr("cx", function (d) { return d.x = Math.max(d.radius, Math.min(width - d.radius, d.x)); })
-                .attr("cy", function (d) { return d.y = Math.max(d.radius, Math.min(height - d.radius, d.y)); });
+            // node.attr("cx", function (d) { return d.x = Math.max(d.radius, Math.min(width - d.radius, d.x)); })
+            //     .attr("cy", function (d) { return d.y = Math.max(d.radius, Math.min(height - d.radius, d.y)); });
 
             // With Images
             // node.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
