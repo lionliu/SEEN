@@ -36,7 +36,7 @@ router.post('/', (req, res) => {
         res.json(data);
     })
     .catch(() => {
-        res.status(400).json({ msg: 'Something went wrong. Probably you need to fill all the necessary fields' })
+        res.status(400).json({ msg: 'Something went wrong. Probably you need to fill all the necessary fields or eventType is wrong' })
     })
 })
 

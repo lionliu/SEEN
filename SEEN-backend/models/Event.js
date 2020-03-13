@@ -4,11 +4,13 @@ const mongoose = require('mongoose');
 const EventSchema = mongoose.Schema({
     eventType: {
         type: String,
-        required: true
+        required: true,
+        match: 'Blocked|PBlocked|Vulnerable|Suspect|Cloned|Normal'
     },
     targetAddrMac: {
         type: String,
-        required: true
+        required: true,
+        match: '([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
     },
     duration: {
         type: Number,

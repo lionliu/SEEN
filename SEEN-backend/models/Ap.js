@@ -4,7 +4,8 @@ const DeviceSchema = mongoose.Schema({
     // Mac, fabricante, tipo de disp, ip?, firmware?
     mac: {
         type: String,
-        required: true
+        required: true,
+        match: '([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
     },
     manufacturer: {
         type: String,
@@ -28,7 +29,8 @@ const ApSchema = mongoose.Schema({
     // mac, ip?, ssid, protocolo de seguranca
     mac: {
         type: String,
-        required: true
+        required: true,
+        match: '([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
     },
     ip: {
         type: String,
