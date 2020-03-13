@@ -14,7 +14,6 @@ const WIDTH = 1920 * 0.95;
 const HEIGHT = 1080 * 0.95;
 
 const colorMapping = {
-    "Normal": "green",
     "Blocked": "red",
     "PBlocked": "salmon",
     "Vulnerable": "yellow",
@@ -274,7 +273,17 @@ class Graph extends Component {
         function updateNode(Events) {
             Events.forEach(event => {
                 node.filter(d => d.mac === event.targetAddrMac)
-                .attr('fill', d => colorMapping[event.eventType]);
+                .attr('fill', d => {
+                    if(event.eventType === 'Normal') {
+                        if(d.isAp) {
+                            return 'blue'
+                        } else {
+                            return 'green'
+                        }
+                    } else {
+                        return colorMapping[event.eventType]
+                    }
+                });
             })
         }
 
