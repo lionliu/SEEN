@@ -4,7 +4,7 @@ services:
         build:
             dockerfile: ./node.Dockerfile
             context: .
-        image: rmsp1/node
+        image: rmsp/node
         container_name: node-container
         ports:
             - "5000"
@@ -16,7 +16,7 @@ services:
         build:
             dockerfile: ./react.Dockerfile
             context: .
-        image: rmsp1/react
+        image: rmsp/react
         container_name: react-container
         ports:
             - "3000"
