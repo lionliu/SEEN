@@ -40,4 +40,10 @@ router.post('/', (req, res) => {
     })
 })
 
+router.delete('/', (req, res) => {
+    Event.deleteMany({}, (err, result) => {
+        res.json({ msg: "Deleted all events" })
+    })
+})
+
 module.exports = router;
