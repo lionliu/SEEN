@@ -30,7 +30,7 @@ const ApSchema = mongoose.Schema({
     mac: {
         type: String,
         required: true,
-        match: '([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})'
+        match: /([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})/
     },
     ip: {
         type: String,

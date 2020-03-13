@@ -91,9 +91,6 @@ class Graph extends Component {
             this.setState({ Aps: res.data });
             this.makeGraph();
         })
-        // this.fetchAps();
-        // this.makeGraph();
-        // this.timer = setInterval(() => this.fetchAps(), 5000);
     }
 
     componentWillUnmount() {
@@ -287,67 +284,6 @@ class Graph extends Component {
             })
         }
 
-        // var alertAttack = setInterval(() => {
-        //     /*Essa função serve pra mudar a cor do nó
-        //     e atualizar o seu status quando ele estiver sendo atacado*/
-        //     console.log('Fetching data');
-
-        //     fetch('/attacks')
-        //         .then(res => res.json())
-                // .then(data => {
-                //     if (data.length > 0) {
-                //         console.log(data[0].dstAddrMAC)
-                //         data.forEach(dt => {
-                //             nodes.forEach((d) => {
-                //                 if (d.mac === dt.dstAddrMAC) {
-                //                     console.log('Detectei nó sendo atacado.');
-                //                     d.color = 'yellow';
-                //                     d.status = 'Unhealthy';
-                //                     d.underAttack = true;
-                //                 }
-                //             })
-                //         })
-                //     }
-                //     nodes.forEach((d) => {
-                //         if (!d.isAp) {
-                //             if (!d.underAttack) {
-                //                 d.color = 'green';
-                //                 d.status = 'healthy';
-                //             }
-                //             if (d.underAttack) {
-                //                 d.underAttack = false;
-                //             }
-                //         }
-                //     })
-                //     node.data(nodes)
-                //         .attr('fill', (d) => { return d.color })
-                // })
-        //         .catch((err) => {
-        //             console.log('Error fetching data');
-        //             console.log(err);
-        //         })
-        // }, 2000);
-
-        /*var testFlag = false
-        setInterval(()=>{
-            //Atualizar os atributos muda eles lá na páginas
-            testFlag = !testFlag
-            node.data(nodes)
-            node.attr('fill', (d)=>{
-                if(d.mac === 'ff:ff:ff:ff:ff:ff'){
-                    if(testFlag === true){
-                        d.status = 'Unhealthy'
-                        return 'yellow'
-                    }else{
-                        d.status = 'Healthy'
-                        return 'green'
-                    }
-                }else{
-                    return d.color
-                }
-            })
-            console.log('Done!');
-        },3000)*/
     }
 
     render() {
