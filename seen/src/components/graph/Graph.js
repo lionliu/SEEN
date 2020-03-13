@@ -13,6 +13,15 @@ const StaUrl = "https://img.icons8.com/ios-filled/100/000000/smartphone.png"
 const WIDTH = 1920 * 0.95;
 const HEIGHT = 1080 * 0.95;
 
+const colorMapping = {
+    "Normal": "green",
+    "Blocked": "red",
+    "PBlocked": "salmon",
+    "Vulnerable": "yellow",
+    "Suspect": "dimgray",
+    "Cloned": "darkgreen"
+}
+
 function toData(data) {
     let links = [];
     let nodes = [];
@@ -26,9 +35,10 @@ function toData(data) {
                 isAp: true,
                 parent: null,
                 mac: Ap.mac,
-                radius: 15,
+                radius: 17,
                 color: 'blue',
-                status: 'Healthy',
+                status: 'Normal',
+                prevStatus: '',
                 underAttack: false,
                 img: APUrl
             })
@@ -40,9 +50,10 @@ function toData(data) {
                     isAp: false,
                     parent: aux,
                     mac: assoc.mac,
-                    radius: 12,
+                    radius: 10,
                     color: 'green',
-                    status: 'Healthy',
+                    status: 'Normal',
+                    prevStatus: '',
                     underAttack: false,
                     img: StaUrl
                 })
@@ -71,30 +82,6 @@ class Graph extends Component {
         Aps: [],
         Events: [],
         isFetching: false
-    }
-
-    // fetchAps method to fetch Access Points from Mongo.
-    fetchAps() {
-        this.setState({ ...this.state, isFetching: true });
-        apis.getAllAps()
-            .then(res => {
-
-                this.setState({ ...this.state, isFetching: false, })
-                // // console.log(this.state.Aps)
-                // if(this.state.firstFetch) {
-                //     this.setState({ ...this.state, firstFetch: false })
-                //     this.makeGraph()
-                // }
-                let newData = res.data
-                if(!_.isEqual(newData, this.state.Aps)) {
-                    this.setState({ Aps: res.data })
-                    this.makeGraph()
-                }
-            })
-            .catch(e => {
-                console.log(e);
-                this.setState({ ...this.state, isFetching: false });
-            });
     }
 
     componentDidMount() {
@@ -170,7 +157,7 @@ class Graph extends Component {
             let data = toData(Aps);
             let nodes = data.nodes;
             let links = data.links;
-            console.log(nodes);
+            // console.log(nodes);
 
             // const old = new Map(node.data().map(d => [d.id, d]));
             // nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
@@ -246,12 +233,7 @@ class Graph extends Component {
                 .then(res => {
 
                     this.setState({ ...this.state, isFetching: false, })
-                    // console.log(this.state.Aps)
-                    console.log('Print do fetch')
-                    // if(this.state.firstFetch) {
-                    //     this.setState({ ...this.state, firstFetch: false })
-                    //     this.makeGraph()
-                    // }
+                    console.log('Print do fetch Aps')
                     let newData = res.data
                     if (!_.isEqual(newData, this.state.Aps)) {
                         this.setState({ Aps: res.data })
@@ -266,6 +248,97 @@ class Graph extends Component {
                     this.setState({ ...this.state, isFetching: false });
                 });
         }, 5000)
+
+        var fetchEvents = setInterval(() => {
+            this.setState({ ...this.state, isFetching: true });
+            apis.getAllEvents()
+                .then(res => {
+
+                    this.setState({ ...this.state, isFetching: false, })
+                    console.log('Print do fetch Events')
+
+                    let newData = res.data
+                    if (!_.isEqual(newData, this.state.Events)) {
+                        this.setState({ Events: res.data })
+                        console.log(this.state.Events);
+                        updateNode(this.state.Events);
+                    }
+                })
+                .catch(e => {
+                    console.log(e);
+                    this.setState({ ...this.state, isFetching: false });
+                });
+        }, 3000)
+
+        // Consegui dar o match, agora so falta alterar a cor dos nodes.
+        function updateNode(Events) {
+            Events.forEach(event => {
+                node.filter(d => d.mac === event.targetAddrMac)
+                .attr('fill', d => colorMapping[event.eventType]);
+            })
+        }
+
+        // var alertAttack = setInterval(() => {
+        //     /*Essa função serve pra mudar a cor do nó
+        //     e atualizar o seu status quando ele estiver sendo atacado*/
+        //     console.log('Fetching data');
+
+        //     fetch('/attacks')
+        //         .then(res => res.json())
+                // .then(data => {
+                //     if (data.length > 0) {
+                //         console.log(data[0].dstAddrMAC)
+                //         data.forEach(dt => {
+                //             nodes.forEach((d) => {
+                //                 if (d.mac === dt.dstAddrMAC) {
+                //                     console.log('Detectei nó sendo atacado.');
+                //                     d.color = 'yellow';
+                //                     d.status = 'Unhealthy';
+                //                     d.underAttack = true;
+                //                 }
+                //             })
+                //         })
+                //     }
+                //     nodes.forEach((d) => {
+                //         if (!d.isAp) {
+                //             if (!d.underAttack) {
+                //                 d.color = 'green';
+                //                 d.status = 'healthy';
+                //             }
+                //             if (d.underAttack) {
+                //                 d.underAttack = false;
+                //             }
+                //         }
+                //     })
+                //     node.data(nodes)
+                //         .attr('fill', (d) => { return d.color })
+                // })
+        //         .catch((err) => {
+        //             console.log('Error fetching data');
+        //             console.log(err);
+        //         })
+        // }, 2000);
+
+        /*var testFlag = false
+        setInterval(()=>{
+            //Atualizar os atributos muda eles lá na páginas
+            testFlag = !testFlag
+            node.data(nodes)
+            node.attr('fill', (d)=>{
+                if(d.mac === 'ff:ff:ff:ff:ff:ff'){
+                    if(testFlag === true){
+                        d.status = 'Unhealthy'
+                        return 'yellow'
+                    }else{
+                        d.status = 'Healthy'
+                        return 'green'
+                    }
+                }else{
+                    return d.color
+                }
+            })
+            console.log('Done!');
+        },3000)*/
     }
 
     render() {
