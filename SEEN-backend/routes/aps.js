@@ -111,18 +111,19 @@ router.delete('/:mac', (req, res) => {
     })
 })
 
-// Delete devices not working properly
 
-// router.delete('/:mac/:dmac', (req, res) => {
-//     Ap.updateOne({ "mac": req.params.mac,  }, {
-//         $pull: {
-//             mac: req.params.dmac
-//         }
-//     })
-//     .then(data => {
-//         res.json({ msg: "Device deleted" })
-//     })
-// })
+router.delete('/:mac/:dmac', (req, res) => {
+    Ap.updateOne({ "mac": req.params.mac,  }, {
+        $pull: {
+            devices: {
+                mac: req.params.dmac
+            }
+        }
+    })
+    .then(data => {
+        res.json({ msg: "Device deleted" })
+    })
+})
 
 
 
