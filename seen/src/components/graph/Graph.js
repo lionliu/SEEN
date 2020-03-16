@@ -4,8 +4,8 @@ import apis from '../../api/index';
 
 const _ = require('lodash')
 const d3 = require('d3');
-const rawData = require('./data.json');
-const rawData2 = require('./data2.json');
+// const rawData = require('./data.json');
+// const rawData2 = require('./data2.json');
 
 const APUrl = "https://img.icons8.com/dusk/64/000000/cisco-router.png";
 const StaUrl = "https://img.icons8.com/ios-filled/100/000000/smartphone.png"
@@ -107,14 +107,14 @@ class Graph extends Component {
             .append('svg')
             .attr('width', '80vw')
             .attr('height', '82vh')
-            // .attr("viewBox", [-WIDTH / 2, -HEIGHT / 2, WIDTH, HEIGHT])
-            // .call(d3.zoom()
-            //     .extent([[0, 0], [WIDTH, HEIGHT]])
-            //     .scaleExtent([1, 8])
-            //     .on("zoom", function () {
-            //     link.attr("transform", d3.event.transform)
-            //     node.attr("transform", d3.event.transform)
-            // }))
+            .attr("viewBox", [-WIDTH / 2, -HEIGHT / 2, WIDTH, HEIGHT])
+            .call(d3.zoom()
+                .extent([[0, 0], [WIDTH, HEIGHT]])
+                .scaleExtent([1, 8])
+                .on("zoom", function () {
+                link.attr("transform", d3.event.transform)
+                node.attr("transform", d3.event.transform)
+            }))
             .style('border', '1px solid black')
 
         var simulation = d3.forceSimulation(nodes)

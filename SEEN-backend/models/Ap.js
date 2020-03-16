@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const DeviceSchema = mongoose.Schema({
-    // Mac, fabricante, tipo de disp, ip?, firmware?
     mac: {
         type: String,
         required: true,
@@ -11,13 +10,14 @@ const DeviceSchema = mongoose.Schema({
         type: String,
         require: false
     },
-    kindDispositive: {
+    dispositiveType: {
         type: String,
         required: false
     },
     ip: {
         type: String,
-        required: false
+        required: false,
+        match: /(?:[0-9]{1,3}\.){3}[0-9]{1,3}/
     },
     firmware: {
         type: String,
@@ -26,7 +26,6 @@ const DeviceSchema = mongoose.Schema({
 })
 
 const ApSchema = mongoose.Schema({
-    // mac, ip?, ssid, protocolo de seguranca
     mac: {
         type: String,
         required: true,
@@ -34,7 +33,8 @@ const ApSchema = mongoose.Schema({
     },
     ip: {
         type: String,
-        required: false
+        required: false,
+        match: /(?:[0-9]{1,3}\.){3}[0-9]{1,3}/
     },
     ssid: {
         type: String,

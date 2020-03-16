@@ -41,7 +41,8 @@ router.post('/', (req, res) => {
         mac: req.body.mac,
         ip: req.body.ip,
         ssid: req.body.ssid,
-        securityProtocol: req.body.securityProtocol
+        securityProtocol: req.body.securityProtocol,
+        devices: req.body.devices
     })
 
     ap.save()
@@ -57,7 +58,7 @@ router.post('/:mac', (req, res) => {
     const device = new Ap.Device ({
         mac: req.body.mac,
         manufacturer: req.body.manufacturer,
-        kindDipositive: req.body.kindDispositive,
+        dispositiveType: req.body.dispositiveType,
         ip: req.body.ip,
         firmware: req.body.firmware
     })

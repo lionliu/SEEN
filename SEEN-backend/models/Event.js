@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// TODO: Verify if the modeling is ok
 const EventSchema = mongoose.Schema({
     eventType: {
         type: String,

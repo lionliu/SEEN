@@ -24,7 +24,6 @@ router.get('/:id', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-    // Cria um novo objeto a partir do Schema
     const event = new Event({
         eventType: req.body.eventType,
         targetAddrMac: req.body.targetAddrMac,
