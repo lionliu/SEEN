@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Ap = require('../models/Ap')
 
-// TODO: AP delete, Device put and delete
-
 router.get('/', (req, res) => {
     Ap.find()
         .then(data => {
@@ -67,12 +65,12 @@ router.post('/:mac', (req, res) => {
             devices: device
         }
     })
-        .then(data => {
-            res.json(data)
-        })
-        .catch(err => {
-            res.status(400).json({ msg: 'Ap not found' })
-        });
+    .then(data => {
+        res.json(data)
+    })
+    .catch(err => {
+        res.status(400).json({ msg: 'Ap not found' })
+    });
 });
 
 
@@ -90,7 +88,41 @@ router.put('/:mac', (req, res) => {
     });
 });
 
+router.put('/:mac/:dmac', (req, res) => {
+    Ap.updateOne({ "mac": req.params.mac,  "devices.mac": req.params.dmac }, {
+        $set: {
+            "devices.$.ip": req.body.ip,
+            "devices.$.manufacturer": req.body.manufacturer,
+            "devices.$.dispositiveType": req.body.dispositiveType,
+            "devices.$.firmware": req.body.firmware
+        }
+    })
+    .then(data => {
+        res.json({ msg: 'Device updated' })
+    })
+    .catch(err => {
+        res.status(400).json({ msg: 'Device not found' })
+    });
+});
 
+router.delete('/:mac', (req, res) => {
+    Ap.deleteOne({ mac: req.params.mac }, (err, result) => {
+        res.json({ msg: "Access point deleted" })
+    })
+})
+
+// Delete devices not working properly
+
+// router.delete('/:mac/:dmac', (req, res) => {
+//     Ap.updateOne({ "mac": req.params.mac,  }, {
+//         $pull: {
+//             mac: req.params.dmac
+//         }
+//     })
+//     .then(data => {
+//         res.json({ msg: "Device deleted" })
+//     })
+// })
 
 
 
