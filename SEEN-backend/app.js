@@ -9,7 +9,7 @@ const app = express();
 const uri = process.env.DB_CONNECTION;
 
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
-    console.log('Connected');
+    console.log('Connected to MongoDB');
 });
 
 
