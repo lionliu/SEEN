@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import Header from './components/layout/header/Header';
+// import Header from './components/layout/header/Header';
 import Graph from './components/graph/Graph';
 import Backdrop from './components/backdrop/backdrop'
 import Toolbar from './components/toolbar/toolbar';

@@ -1,0 +1,34 @@
+{
+    "events": [
+        {
+            "_id": {
+                "$oid": "5e6f9e2f62d4eb08ce9435bc"
+            },
+            "eventType": "Vulnerable",
+            "targetAddrMac": "AA:66:20:77:AA:55",
+            "timestamp": {
+                "$date": {
+                    "$numberLong": "1584373295941"
+                }
+            },
+            "__v": {
+                "$numberInt": "0"
+            }
+        },
+        {
+            "_id": {
+                "$oid": "5e70d1a71f610b10829a104b"
+            },
+            "eventType": "PBlocked",
+            "targetAddrMac": "AA:66:20:77:AA:55",
+            "timestamp": {
+                "$date": {
+                    "$numberLong": "1584452007845"
+                }
+            },
+            "__v": {
+                "$numberInt": "0"
+            }
+        }
+    ]
+}

@@ -107,7 +107,7 @@ class Graph extends Component {
             .append('svg')
             .attr('width', '80vw')
             .attr('height', '82vh')
-            .attr("viewBox", [-WIDTH / 2, -HEIGHT / 2, WIDTH, HEIGHT])
+            // .attr("viewBox", [-WIDTH / 2, -HEIGHT / 2, WIDTH, HEIGHT])
             .call(d3.zoom()
                 .extent([[0, 0], [WIDTH, HEIGHT]])
                 .scaleExtent([1, 8])
