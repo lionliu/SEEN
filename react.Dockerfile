@@ -1,6 +1,8 @@
 FROM node:latest
-COPY ./seen /var/www/
-WORKDIR /var/www/
-RUN npm install
+COPY ./seen /var/www/public
+ENV PORT=3000
+WORKDIR /var/www/public
+RUN ["npm", "install"]
+RUN ["npm", "audit", "fix"]
 ENTRYPOINT ["npm", "start"]
-EXPOSE 3000
+EXPOSE ${PORT}
