@@ -4,11 +4,9 @@ import apis from '../../api/index';
 
 const _ = require('lodash')
 const d3 = require('d3');
-// const rawData = require('./data.json');
-// const rawData2 = require('./data2.json');
 
 const APUrl = "https://img.icons8.com/dusk/64/000000/cisco-router.png";
-const StaUrl = "https://img.icons8.com/ios-filled/100/000000/smartphone.png"
+const StaUrl = "https://img.icons8.com/ios-filled/100/000000/smartphone.png";
 
 const WIDTH = 1920 * 0.95;
 const HEIGHT = 1080 * 0.95;
@@ -35,7 +33,7 @@ function toData(data) {
                 parent: null,
                 mac: Ap.mac,
                 radius: 17,
-                color: 'blue',
+                color: '263238',
                 status: 'Normal',
                 prevStatus: '',
                 underAttack: false,
@@ -50,7 +48,7 @@ function toData(data) {
                     parent: aux,
                     mac: assoc.mac,
                     radius: 10,
-                    color: 'green',
+                    color: 'white',
                     status: 'Normal',
                     prevStatus: '',
                     underAttack: false,
@@ -86,8 +84,6 @@ class Graph extends Component {
     componentDidMount() {
         apis.getAllAps()
         .then(res => {
-            // console.log(res.data);
-            console.log('primeiro fetch')
             this.setState({ Aps: res.data });
             this.makeGraph();
         })
@@ -107,7 +103,6 @@ class Graph extends Component {
             .append('svg')
             .attr('width', '80vw')
             .attr('height', '82vh')
-            // .attr("viewBox", [-WIDTH / 2, -HEIGHT / 2, WIDTH, HEIGHT])
             .call(d3.zoom()
                 .extent([[0, 0], [WIDTH, HEIGHT]])
                 .scaleExtent([1, 8])
@@ -137,9 +132,6 @@ class Graph extends Component {
 
         // Função necessaria para inicializar a simulacao
         function ticked() {
-            // node.data(nodes)
-            // link.data(links)
-
             node.attr("cx", function (d) { return d.x; })
                 .attr("cy", function (d) { return d.y; })
 
@@ -153,14 +145,11 @@ class Graph extends Component {
             let data = toData(Aps);
             let nodes = data.nodes;
             let links = data.links;
-            // console.log(nodes);
-
-            // const old = new Map(node.data().map(d => [d.id, d]));
-            // nodes = nodes.map(d => Object.assign(old.get(d.id) || {}, d));
-            // links = links.map(d => Object.assign({}, d));
+            console.log(Aps);
+            console.log(nodes);
+            console.log(links);
 
             node = node.data(nodes, d => d.id);
-            // Post e delete dos aparelhos estao bugados. No post ele vem como azul e no delete ele sai, mas torna um AP verde.
             node.exit().remove();
 
             node = node.enter()
@@ -172,8 +161,8 @@ class Graph extends Component {
                         .transition()
                         .duration(500)
                         .style("cursor", "pointer")
-                        .attr("width", 60) //The bar becomes large
-                    myTool.transition() // myTool é o body do html selecionado pelo d3
+                        .attr("width", 60)
+                    myTool.transition()
                         .duration(500)
                         .style('opacity', '1')
                         .style('display', 'block');
@@ -207,16 +196,13 @@ class Graph extends Component {
             link = link.enter()
             .append('line')
             .attr('stroke-width', 3)
-            .style('stroke', 'black')
+            .style('stroke', 'white')
             .merge(link);
 
             simulation.nodes(nodes)
                 .force("link", d3.forceLink(links).id(d => d.id).links(links).distance(60))
                 .force("charge", d3.forceManyBody().strength(-150))
                 .force('center', d3.forceCenter(WIDTH / 2, HEIGHT / 2))
-                // .force("x", d3.forceX())
-                // .force("y", d3.forceY())
-                // .on('tick', ticked);
             
             simulation.alpha(1).restart();
 
@@ -229,14 +215,10 @@ class Graph extends Component {
                 .then(res => {
 
                     this.setState({ ...this.state, isFetching: false, })
-                    console.log('Print do fetch Aps')
                     let newData = res.data
                     if (!_.isEqual(newData, this.state.Aps)) {
-                        this.setState({ Aps: res.data })
-                        // console.log(this.state.Aps);
-                        console.log('State')
-                        console.log(this.state.Aps);
-                        updateGraph(this.state.Aps)
+                        this.setState({ ...this.state, Aps: res.data })
+                        window.location.reload();
                     }
                 })
                 .catch(e => {
@@ -251,12 +233,10 @@ class Graph extends Component {
                 .then(res => {
 
                     this.setState({ ...this.state, isFetching: false, })
-                    console.log('Print do fetch Events')
 
                     let newData = res.data
                     if (!_.isEqual(newData, this.state.Events)) {
-                        this.setState({ Events: res.data })
-                        console.log(this.state.Events);
+                        this.setState({ ...this.state, Events: res.data })
                         updateNode(this.state.Events);
                     }
                 })
@@ -266,16 +246,15 @@ class Graph extends Component {
                 });
         }, 3000)
 
-        // Consegui dar o match, agora so falta alterar a cor dos nodes.
         function updateNode(Events) {
             Events.forEach(event => {
                 node.filter(d => d.mac === event.targetAddrMac)
                 .attr('fill', d => {
                     if(event.eventType === 'Normal') {
                         if(d.isAp) {
-                            return 'blue'
+                            return '#263238'
                         } else {
-                            return 'green'
+                            return 'white'
                         }
                     } else {
                         return colorMapping[event.eventType]

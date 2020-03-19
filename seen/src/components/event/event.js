@@ -3,8 +3,6 @@ import { getAllEvents } from '../../api/index';
 import EventCard from './EventCard';
 import './event.css'
 
-const rawdata = require('./eventsStub.json');
-
 export default class event extends Component {
 
     state = {
@@ -36,8 +34,8 @@ export default class event extends Component {
         )
         
         
-        return this.state.Events.map(event => (
-            <EventCard event={event}/>
-        ));
+        // return this.state.Events.map(event => (
+        //     <EventCard event={event}/>
+        // ));
     }
 }
