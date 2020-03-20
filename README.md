@@ -2,7 +2,7 @@
 
 SEEN (SEcurity Event Notice for IoT) is a graph based visualizer for an IoT network.
 
-
+SEEN-IoT is available at: http://seen-iot.herokuapp.com/
 
 ## Getting Started
 
