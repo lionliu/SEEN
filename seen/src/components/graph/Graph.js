@@ -77,6 +77,8 @@ class Graph extends Component {
 
     state = {
         Aps: [],
+        Nodes: [],
+        Links: [],
         Events: [],
         isFetching: false
     }
@@ -84,7 +86,9 @@ class Graph extends Component {
     componentDidMount() {
         apis.getAllAps()
         .then(res => {
-            this.setState({ Aps: res.data });
+            let data = toData(res.data);
+
+            this.setState({ Aps: res.data, Nodes: data.nodes, Links: data.links });
             this.makeGraph();
         })
     }
@@ -95,9 +99,12 @@ class Graph extends Component {
     }
     
     makeGraph() {
-        var data = toData(this.state.Aps);
-        var nodes = data.nodes;
-        var links = data.links;
+        // var data = toData(this.state.Aps);
+        // var nodes = data.nodes;
+        // var links = data.links;
+
+        var nodes = this.state.Nodes;
+        var links = this.state.Links;
 
         var canvas = d3.select(this.refs.canvas)
             .append('svg')
@@ -128,7 +135,7 @@ class Graph extends Component {
             .attr('class', 'nodes')
             .selectAll('circle')
 
-        updateGraph(this.state.Aps)
+        updateGraph(this.state.Nodes, this.state.Links)
 
         // Função necessaria para inicializar a simulacao
         function ticked() {
@@ -141,13 +148,16 @@ class Graph extends Component {
                 .attr("y2", function (d) { return d.target.y; });
         }
 
-        function updateGraph(Aps) {
-            let data = toData(Aps);
-            let nodes = data.nodes;
-            let links = data.links;
-            console.log(Aps);
-            console.log(nodes);
-            console.log(links);
+        function updateGraph(Nodes, Links) {
+            // let data = toData(Aps);
+            // let nodes = data.nodes;
+            // let links = data.links;
+            // console.log(Aps);
+            // console.log(nodes);
+            // console.log(links);
+
+            let nodes = Nodes;
+            let links = Links;
 
             node = node.data(nodes, d => d.id);
             node.exit().remove();
@@ -217,7 +227,8 @@ class Graph extends Component {
                     this.setState({ ...this.state, isFetching: false, })
                     let newData = res.data
                     if (!_.isEqual(newData, this.state.Aps)) {
-                        this.setState({ ...this.state, Aps: res.data })
+                        let data = toData(res.data);
+                        this.setState({ ...this.state, Aps: res.data, Nodes: data.nodes, Links: data.links })
                         window.location.reload();
                     }
                 })
@@ -247,6 +258,7 @@ class Graph extends Component {
         }, 3000)
 
         function updateNode(Events) {
+            // Updating nodes in d3
             Events.forEach(event => {
                 node.filter(d => d.mac === event.targetAddrMac)
                 .attr('fill', d => {
@@ -260,6 +272,7 @@ class Graph extends Component {
                         return colorMapping[event.eventType]
                     }
                 });
+                nodes.find(d => d.mac === event.targetAddrMac).status = event.eventType;
             })
         }
 
