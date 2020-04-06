@@ -25,9 +25,6 @@ export default class event extends Component {
     }
 
     render() {
-
-        
-        
         console.log("Renderizando");
         
         return(

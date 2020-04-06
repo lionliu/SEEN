@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import './Graph.css'
 import apis from '../../api/index';
 
+const macMap = require('../../mac.json');
+
 const _ = require('lodash')
 const d3 = require('d3');
 
@@ -179,10 +181,10 @@ class Graph extends Component {
 
                     myTool
                         .html(
-                            "<div id ='teste' >Mac: " + d.mac + "<br>Status: " + d.status + "</div>"
+                            "<div id ='teste' >Mac: " + d.mac + "<br>Manufacturer: " + (macMap[d.mac.substring(0, 8)] === undefined ? "Not found." : macMap[d.mac.substring(0, 8)]) + "<br>Status: " + d.status + "</div>"
                         )
                         .style("left", (d3.event.pageX - 90) + "px")
-                        .style("top", (d3.event.pageY - 60) + "px")
+                        .style("top", (d3.event.pageY - 90) + "px")
                 })
                 .on("mouseout", function (d) {  //Mouse event
                     d3.select(this)

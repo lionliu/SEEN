@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import './eventCard.css'
 
+const macMap = require("../../mac.json")
+
 const colorMapping = {
     "Blocked": "red",
     "PBlocked": "salmon",
@@ -38,13 +40,16 @@ export default class EventCard extends Component {
                 <div style={cardStyle}>
                     <div style={containerStyle}>
                         <p>
-                            Event: {eventType}
+                        <b>Event:</b> {eventType}
                         </p>
                         <p>
-                            Target MAC: {targetAddrMac}
+                        <b>Target MAC:</b> {targetAddrMac}
                         </p>
                         <p>
-                            Timestamp: {timestamp}
+                        <b>Manucfacter:</b> {macMap[targetAddrMac.substring(0, 8)] === undefined ? "Manufacturer not found." : macMap[targetAddrMac.substring(0, 8)]}
+                        </p>
+                        <p>
+                        <b>Timestamp:</b> {timestamp}
                         </p>
                     </div>
                 </div>
