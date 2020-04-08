@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { getAllEvents } from '../../api/index';
+import { getAllEvents, getAllAps } from '../../api/index';
 import EventList from './EventList'
 import './event.css'
 
@@ -7,6 +7,7 @@ export default class event extends Component {
 
     state = {
         Events: [],
+        Aps: [],
         filter: ""
     }
 
@@ -16,6 +17,12 @@ export default class event extends Component {
             this.setState({
                 Events: res.data, filter: "---" });
         })
+        getAllAps()
+            .then(res => {
+                this.setState({
+                    Aps: res.data
+                });
+            })
     }
 
     onChange = (event) => {
@@ -59,7 +66,9 @@ export default class event extends Component {
                         } else {
                             return event.eventType === this.state.filter;
                         }
-                })}></EventList>
+                        })}
+                        Aps={this.state.Aps}
+                ></EventList>
         
             </div>
         )

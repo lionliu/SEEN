@@ -23,6 +23,7 @@ export default class EventCard extends Component {
     render() {
 
         const { eventType, targetAddrMac, timestamp } = this.props.event;
+        const type = this.props.type;
 
         const cardStyle = {
             boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",
@@ -40,16 +41,19 @@ export default class EventCard extends Component {
                 <div style={cardStyle}>
                     <div style={containerStyle}>
                         <p>
-                        <b>Event:</b> {eventType}
+                            <b>Event:</b> {eventType}
                         </p>
                         <p>
-                        <b>Target MAC:</b> {targetAddrMac}
+                            <b>Target MAC:</b> {targetAddrMac}
                         </p>
                         <p>
-                        <b>Manucfacter:</b> {macMap[targetAddrMac.substring(0, 8)] === undefined ? "Manufacturer not found." : macMap[targetAddrMac.substring(0, 8)]}
+                            <b>Manucfacter:</b> {macMap[targetAddrMac.substring(0, 8)] === undefined ? "Manufacturer not found." : macMap[targetAddrMac.substring(0, 8)]}
                         </p>
                         <p>
-                        <b>Timestamp:</b> {timestamp}
+                            <b>Dispositive Type:</b> {type}
+                        </p>
+                        <p>
+                            <b>Timestamp:</b> {timestamp}
                         </p>
                     </div>
                 </div>

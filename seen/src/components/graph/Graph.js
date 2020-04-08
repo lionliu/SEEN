@@ -54,7 +54,8 @@ function toData(data) {
                     status: 'Normal',
                     prevStatus: '',
                     underAttack: false,
-                    img: StaUrl
+                    img: StaUrl,
+                    type: assoc.dispositiveType
                 })
                 links.push({ // Sintaxe utilizada pelo d3 para criar as arestas
                     source: i,
@@ -181,7 +182,10 @@ class Graph extends Component {
 
                     myTool
                         .html(
-                            "<div id ='teste' >Mac: " + d.mac + "<br>Manufacturer: " + (macMap[d.mac.substring(0, 8)] === undefined ? "Not found." : macMap[d.mac.substring(0, 8)]) + "<br>Status: " + d.status + "</div>"
+                            "<div id ='teste' >Mac: " + d.mac + 
+                            "<br>Manufacturer: " + (macMap[d.mac.substring(0, 8)] === undefined ? "Not found." : macMap[d.mac.substring(0, 8)]) + 
+                            "<br>Type: " + (d.type === undefined? "Not registered" : d.type) +
+                            "<br>Status: " + d.status + "</div>"
                         )
                         .style("left", (d3.event.pageX - 90) + "px")
                         .style("top", (d3.event.pageY - 90) + "px")
@@ -257,7 +261,7 @@ class Graph extends Component {
                     console.log(e);
                     this.setState({ ...this.state, isFetching: false });
                 });
-        }, 3000)
+        }, 1000)
 
         function updateNode(Events) {
             // Updating nodes in d3
