@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Ap = require('../models/Ap')
 
+// Get all APs
 router.get('/', (req, res) => {
     Ap.find()
         .then(data => {
@@ -12,6 +13,7 @@ router.get('/', (req, res) => {
         })
 });
 
+// Get AP by mac
 router.get('/:mac', (req, res) => {
     Ap.findOne({ "mac": req.params.mac })
         .then(data => {
@@ -22,6 +24,7 @@ router.get('/:mac', (req, res) => {
         });
 });
 
+// Get device from AP
 router.get('/:mac/:dmac', (req, res) => {
     Ap.findOne({ 
         "mac": req.params.mac,
@@ -34,6 +37,7 @@ router.get('/:mac/:dmac', (req, res) => {
         });
 });
 
+// Post new AP;
 router.post('/', (req, res) => {
     const ap = new Ap({
         mac: req.body.mac,
@@ -52,6 +56,7 @@ router.post('/', (req, res) => {
         })
 });
 
+// Post new device
 router.post('/:mac', (req, res) => {
     const device = new Ap.Device ({
         mac: req.body.mac,
@@ -73,7 +78,7 @@ router.post('/:mac', (req, res) => {
     });
 });
 
-
+// Edit AP
 router.put('/:mac', (req, res) => {
     Ap.updateOne({ mac: req.params.mac }, { $set: { 
         ip: req.body.ip,
@@ -88,6 +93,7 @@ router.put('/:mac', (req, res) => {
     });
 });
 
+// Edit device;
 router.put('/:mac/:dmac', (req, res) => {
     Ap.updateOne({ "mac": req.params.mac,  "devices.mac": req.params.dmac }, {
         $set: {
@@ -105,6 +111,7 @@ router.put('/:mac/:dmac', (req, res) => {
     });
 });
 
+// Delete AP;
 router.delete('/:mac', (req, res) => {
     Ap.deleteOne({ mac: req.params.mac }, (err, result) => {
         res.json({ msg: "Access point deleted" })
@@ -112,6 +119,7 @@ router.delete('/:mac', (req, res) => {
 })
 
 
+// Delete device;
 router.delete('/:mac/:dmac', (req, res) => {
     Ap.updateOne({ "mac": req.params.mac,  }, {
         $pull: {

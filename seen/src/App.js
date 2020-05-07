@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+import './App.scss';
 
 // import Header from './components/layout/header/Header';
 import Graph from './components/graph/Graph';
@@ -7,6 +7,7 @@ import Backdrop from './components/backdrop/backdrop'
 import Toolbar from './components/toolbar/toolbar';
 import Event from './components/event/event';
 import SideDrawer from './components/layout/sideDrawer/sideDrawer';
+import Log from './components/log/log';
 
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
@@ -45,6 +46,7 @@ class App extends Component {
           <Switch>
             <Route path='/events' component={Event} />
             <Route path='/' exact component={Graph} />
+            <Route path='/logs' component={Log} />
           </Switch>
         </div>
       </Router>

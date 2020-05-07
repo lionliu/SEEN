@@ -60,6 +60,7 @@ export default class event extends Component {
                     { listEvents }
                 </div> */}
 
+                {/* Ja filtra os eventos filtrados no props */}
                 <EventList filter={this.state.filter} Events={this.state.Events.filter(event => {
                        if (this.state.filter === "---") {
                             return true;

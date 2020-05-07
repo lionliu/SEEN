@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Event = require('../models/Event')
 
-
+// Get all events
 router.get('/', (req, res) => {
     Event.find()
     .then(data => {
@@ -23,6 +23,7 @@ router.get('/:id', (req, res) => {
         });
 })
 
+// Publish new event
 router.post('/', (req, res) => {
     const event = new Event({
         eventType: req.body.eventType,

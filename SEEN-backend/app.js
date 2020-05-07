@@ -8,6 +8,7 @@ const app = express();
 
 const uri = process.env.DB_CONNECTION;
 
+// Conecta com o mongo;
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
     console.log('Connected to MongoDB');
 });

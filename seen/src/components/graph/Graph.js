@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './Graph.css'
 import apis from '../../api/index';
 
+// Importa o objeto que contem os macs;
 const macMap = require('../../mac.json');
 
 const _ = require('lodash')
@@ -19,8 +20,27 @@ const colorMapping = {
     "Vulnerable": "yellow",
     "Suspect": "dimgray",
     "Cloned": "darkgreen"
+};
+
+// default max opacity = 5min = 300s = 300000ms (JS default result)
+// Funcao que diminui a opacidade a partir do relative, que está em segundos;
+// O node nao fica opaco se a diferenca do tempo for menor que a metade do relative
+// Fica parcialmente opaco se a diferenca estiver entre a metade de relative e relative
+function opacityByTime(timestamp, relative=300) {
+    let now = new Date();
+    let elapsed = now - timestamp;
+    elapsed /= 1000; // milliseconds to seconds
+    if(elapsed > relative) {
+        return 0.3;
+    }
+    if(elapsed <= relative / 2) {
+        return 1;
+    } else if(elapsed > relative / 2) {
+        return 0.6;
+    }
 }
 
+// Transform the AP scheme in the DB into D3 force format;
 function toData(data) {
     let links = [];
     let nodes = [];
@@ -69,6 +89,7 @@ function toData(data) {
     return { nodes, links };
 } 
 
+// Pop-up window for the nodes
 var myTool = d3.select("body")
     .append("div")
     .attr("class", "tooltip")
@@ -169,7 +190,7 @@ class Graph extends Component {
                 .append('circle')
                 .attr('r', d => d.radius)
                 .attr('fill', d => d.color)
-                .on("mouseover", function (d) {  //Mouse
+                .on("mouseover", function (d) {  
                     d3.select(this)
                         .transition()
                         .duration(500)
@@ -183,7 +204,7 @@ class Graph extends Component {
                     myTool
                         .html(
                             "<div id ='teste' >Mac: " + d.mac + 
-                            "<br>Manufacturer: " + (macMap[d.mac.substring(0, 8)] === undefined ? "Not found." : macMap[d.mac.substring(0, 8)]) + 
+                            "<br>Manufacturer: " + (macMap[d.mac.substring(0, 8)] === undefined ? "Not found." : macMap[d.mac.substring(0, 8)]) + // Se o MAC por algum motivo nao existir, vai exibir o Not found;
                             "<br>Type: " + (d.type === undefined? "Not registered" : d.type) +
                             "<br>Status: " + d.status + "</div>"
                         )
@@ -225,6 +246,8 @@ class Graph extends Component {
 
         }
 
+        // Vai ficar verificando os aps a cada 5 segundos. e se for diferente
+        // vai reiniciar a pagina. Isso esta sendo feito pois o d3 force bugava se tentasse alterar os nodes diretamente.
         var fetchAps = setInterval(() => {
             this.setState({ ...this.state, isFetching: true });
             apis.getAllAps()
@@ -232,6 +255,7 @@ class Graph extends Component {
 
                     this.setState({ ...this.state, isFetching: false, })
                     let newData = res.data
+                    console.log(newData);
                     if (!_.isEqual(newData, this.state.Aps)) {
                         let data = toData(res.data);
                         this.setState({ ...this.state, Aps: res.data, Nodes: data.nodes, Links: data.links })
@@ -244,6 +268,7 @@ class Graph extends Component {
                 });
         }, 5000)
 
+        // Vai ficar verificando os eventos para alterar a cor de algum no a partir do evento
         var fetchEvents = setInterval(() => {
             this.setState({ ...this.state, isFetching: true });
             apis.getAllEvents()
@@ -263,6 +288,9 @@ class Graph extends Component {
                 });
         }, 1000)
 
+        // Funcao para alterar a cor do node
+        // E tambem adicionar opacidade com uma diferenca do tempo
+        // A timestamp ainda tem que ser implementada no schema do AP e Device;
         function updateNode(Events) {
             // Updating nodes in d3
             Events.forEach(event => {
@@ -275,7 +303,12 @@ class Graph extends Component {
                             return 'white'
                         }
                     } else {
-                        return colorMapping[event.eventType]
+                        let c = d3.color(colorMapping[event.eventType]);
+                        // let stubTime = new Date("2020-03-20T20:26:07.592Z");
+                        // // let time = d.time;
+                        // c.opacity = opacityByTime(stubTime);
+                        return c;
+                        // return colorMapping[event.eventType]
                     }
                 });
                 nodes.find(d => d.mac === event.targetAddrMac).status = event.eventType;

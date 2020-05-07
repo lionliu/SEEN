@@ -21,6 +21,11 @@ const sideDrawer = props => {
                         Events
                 </a>
                 </li>
+                <li className='links'>
+                    <a className='list-item' href='/logs'>
+                        Logs
+                </a>
+                </li>
             </ul>
         </nav>)
 };

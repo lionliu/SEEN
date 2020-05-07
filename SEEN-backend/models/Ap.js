@@ -23,6 +23,10 @@ const DeviceSchema = mongoose.Schema({
         type: String,
         required: false
     }
+    // lastTimeSeen: {
+    //     type: Date,
+    //     default: Date.now
+    // }
 })
 
 const ApSchema = mongoose.Schema({
@@ -44,6 +48,10 @@ const ApSchema = mongoose.Schema({
         type: String,
         required: false
     },
+    // lastTimeSeen: {
+    //     type: Date,
+    //     default: Date.now
+    // },
     devices: [DeviceSchema]
 });
 
